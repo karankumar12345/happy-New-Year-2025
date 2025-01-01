@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { GitBranch } from 'lucide-react';
 
 export function CommitCountdown() {

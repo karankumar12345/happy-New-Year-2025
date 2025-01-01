@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import  { useEffect, useRef } from 'react';
 import { generateCodeSnippet } from '../../utils/codeSnippets';
 
 interface CodeFireworksProps {
@@ -10,15 +10,16 @@ export function CodeFireworks({ name }: CodeFireworksProps) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-
+    if (!canvas) return; // Ensure canvas is not null
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) return; // Ensure ctx is not null
 
     // Function to resize canvas dynamically
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = Math.min(window.innerHeight / 2, 300); // Restrict canvas height
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = Math.min(window.innerHeight / 2, 300); // Restrict canvas height
+      }
     };
 
     resizeCanvas(); // Initial size set
@@ -58,36 +59,38 @@ export function CodeFireworks({ name }: CodeFireworksProps) {
 
     // Animation loop
     function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (ctx && canvas) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.05;
-        p.alpha -= 0.01;
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.alpha -= 0.01;
 
-        ctx.save();
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.font = '12px monospace';
-        ctx.fillText(p.text, p.x, p.y);
-        ctx.restore();
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.font = '12px monospace';
+          ctx.fillText(p.text, p.x, p.y);
+          ctx.restore();
 
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
+          if (p.alpha <= 0) {
+            particles.splice(i, 1);
+          }
         }
-      }
 
-      if (Math.random() < 0.05) {
-        createCodeFirework(
-          Math.random() * canvas.width,
-          canvas.height - Math.random() * 100 // Restrict firework starting positions
-        );
-      }
+        if (Math.random() < 0.05) {
+          createCodeFirework(
+            Math.random() * canvas.width,
+            canvas.height - Math.random() * 100 // Restrict firework starting positions
+          );
+        }
 
-      requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
+      }
     }
 
     animate();
@@ -101,7 +104,7 @@ export function CodeFireworks({ name }: CodeFireworksProps) {
   return (
     <canvas
       ref={canvasRef}
-      className=" pointer-events-none z-50"
+      className="pointer-events-none z-50"
     />
   );
 }

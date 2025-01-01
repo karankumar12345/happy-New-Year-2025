@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { CodeGoal } from './types';
 import { GoalForm } from './components/goals/GoalForm';
